@@ -1,8 +1,8 @@
-package com.scalaterraform.commands
+package com.syedatifakhtar.scalaterraform
 
 import java.io.File
 
-import com.scalaterraform.commands.TerraformCommand.{MultiValueConfig, MultiValueTerraformArgument, SingleValueTerraformArgument}
+import TerraformCommand.{MultiValueConfig, MultiValueTerraformArgument, SingleValueTerraformArgument}
 import org.apache.commons.io.FileUtils
 
 import scala.reflect.io.Directory

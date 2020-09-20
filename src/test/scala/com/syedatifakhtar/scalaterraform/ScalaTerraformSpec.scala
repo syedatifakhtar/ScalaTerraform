@@ -1,10 +1,11 @@
+package com.syedatifakhtar.scalaterraform
+
 
 import java.io.File
 import java.nio.file.Files
 
-import com.scalaterraform.commands.PlanAndApplyArguments.Vars
-import com.scalaterraform.commands.{ApplyCommand, PlanCommand}
-import com.scalaterraform.commands.InitArguments._
+import com.syedatifakhtar.scalaterraform.InitArguments.{BackendConfigs, HasBackend, InitCommand}
+import com.syedatifakhtar.scalaterraform.PlanAndApplyArguments.Vars
 import org.scalatest.funspec._
 import org.scalatest.matchers._
 
@@ -12,8 +13,8 @@ import scala.reflect.io.Directory
 
 class ScalaTerraformSpec extends AnyFunSpec with should.Matchers {
 
-  private val sourceDirPath = getClass.getResource("hello-world-tf").getPath
-  private val sourceDirPathTFVars = getClass.getResource("hello-world-tf-vars").getPath
+  private val sourceDirPath = getClass.getClassLoader.getResource("hello-world-tf").getPath
+  private val sourceDirPathTFVars = getClass.getClassLoader.getResource("hello-world-tf-vars").getPath
   def createTempDir(): File = {
     Files.createTempDirectory("tmp").toFile
   }
@@ -40,14 +41,14 @@ class ScalaTerraformSpec extends AnyFunSpec with should.Matchers {
       it("should trigger shell process and create the terraform directory") {
         val tempFolder = createTempDir
         println(s"Temp folder: ${tempFolder}")
-        val tfResourceDir = new File(getClass.getResource("hello-world-tf").getPath)
+        val tfResourceDir = sourceDirPath
         val buildFolder = new File(tempFolder.getAbsolutePath + "/build")
         InitCommand(
-          tfResourceDir.getAbsolutePath
+          tfResourceDir
           , buildFolder.getAbsolutePath
         ).run
         assertResult(true)(buildFolder.listFiles().map(_.getName).exists(_.equalsIgnoreCase(".terraform")))
-//        Directory(tempFolder).deleteRecursively()
+        Directory(tempFolder).deleteRecursively()
       }
     }
   }

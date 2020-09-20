@@ -1,10 +1,8 @@
-package com.scalaterraform.commands
+package com.syedatifakhtar.scalaterraform
 
 import java.io.File
-import scala.reflect.io.Directory
 
-import com.typesafe.scalalogging.Logger
-import org.apache.commons.io.FileUtils
+import com.typesafe.scalalogging.{LazyLogging, Logger}
 
 import scala.util.Try
 
@@ -37,18 +35,16 @@ object TerraformCommand {
 
 }
 
-protected trait TerraformCommand[T <: TerraformArgument] {
-  protected val LOG: Logger = Logger.apply(this.getClass)
+protected trait TerraformCommand[T <: TerraformArgument] extends LazyLogging {
 
-  import scala.sys.process.{ProcessLogger, stderr, stdout}
-  import scala.sys.process._
+  import scala.sys.process.{ProcessLogger, stderr, stdout, _}
 
   private val processLogger = ProcessLogger(stdout append _, stderr append _)
   protected def runCommand = {
     (cmd: String, absolutePath: String) =>
-      LOG.debug(s"Running command-> ${cmd} in Dir-> ${absolutePath}")
+      logger.info(s"Running command-> ${cmd} in Dir-> ${absolutePath}")
       val exitCode = Process(Seq("bash","-c",cmd), Some(new File(absolutePath))) ! processLogger
-      stdout.println()
+      stdout.toString
       if (exitCode != 0) {
         stderr.println()
         throw new Exception(s"Failed to run command : ${cmd}")
@@ -80,7 +76,7 @@ protected trait TerraformCommand[T <: TerraformArgument] {
       validateAll
       commandHook
       val command = buildCommand
-      LOG.info(s"Running command: $command")
+      logger.info(s"Running command: $command")
       runCommand(command, buildDirPath)
     }
   }

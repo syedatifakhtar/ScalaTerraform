@@ -1,7 +1,7 @@
-package com.scalaterraform.commands
+package com.syedatifakhtar.scalaterraform
 
-import com.scalaterraform.commands.PlanAndApplyArguments._
-import com.scalaterraform.commands.TerraformCommand.{MultiValueConfig, MultiValueTerraformArgument}
+import PlanAndApplyArguments._
+import TerraformCommand.{MultiValueConfig, MultiValueTerraformArgument}
 
 final case class PlanCommand(
   override val sourceDir: String,
