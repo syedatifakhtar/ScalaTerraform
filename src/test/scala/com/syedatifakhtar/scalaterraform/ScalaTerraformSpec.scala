@@ -4,7 +4,7 @@ package com.syedatifakhtar.scalaterraform
 import java.io.File
 import java.nio.file.Files
 
-import com.syedatifakhtar.scalaterraform.InitArguments.{BackendConfigs, HasBackend, InitCommand}
+import com.syedatifakhtar.scalaterraform.InitArguments.{BackendConfigs, HasBackend}
 import com.syedatifakhtar.scalaterraform.PlanAndApplyArguments.Vars
 import org.scalatest.funspec._
 import org.scalatest.matchers._
@@ -246,6 +246,41 @@ class ScalaTerraformSpec extends AnyFunSpec with should.Matchers {
           .map(_.getName)
           .exists(_.equalsIgnoreCase("someKey.tfstate")))
       Directory(tempFolder).deleteRecursively()
+    }
+  }
+
+  describe("Terraform output") {
+    describe("is built with empty args") {
+      it("should match") {
+        assertResult("terraform output -json")(OutputCommand("", "").buildCommand)
+      }
+    }
+
+    describe("is run") {
+      it("should capture the output as string") {
+        val tempFolder = createTempDir()
+        println(s"Temp folder: ${tempFolder}")
+        val tfResourceDir = new File(sourceDirPath)
+        val buildDirFile = new File(tempFolder.getAbsolutePath + "/build")
+        val output = for {
+          _ <- InitCommand(
+            tfResourceDir.getAbsolutePath
+            , buildDirFile.getAbsolutePath
+            , HasBackend()
+            , BackendConfigs(Map("path" -> "someKey.tfstate"))
+          ).run
+          _ <- ApplyCommand(
+            tfResourceDir.getAbsolutePath
+            , buildDirFile.getAbsolutePath)
+            .run
+          result <- OutputCommand(
+            tfResourceDir.getAbsolutePath
+            , buildDirFile.getAbsolutePath
+          ).run
+        } yield (result)
+        assertResult("Hello, World!")(output.get("hello_world"))
+        Directory(tempFolder).deleteRecursively()
+      }
     }
   }
 

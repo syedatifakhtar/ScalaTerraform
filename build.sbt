@@ -1,5 +1,5 @@
 name := "ScalaTerraform"
-version := "0.1-SNAPSHOT"
+version := "0.2-SNAPSHOT"
 organization := "com.syedatifakhtar"
 resolvers += "Artima Maven Repository" at "https://repo.artima.com/releases"
 assemblyJarName in assembly := "scalaterraform.jar"
@@ -13,5 +13,6 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest-mustmatchers" % "3.2.0" % "test",
   "commons-io" % "commons-io" % "2.8.0",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
-  "ch.qos.logback" % "logback-classic" % "1.2.3"
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
+  "com.typesafe.play" %% "play-json" % "2.8.1"
 )

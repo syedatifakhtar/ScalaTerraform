@@ -1,28 +1,27 @@
 package com.syedatifakhtar.scalaterraform
 
-import PlanAndApplyArguments._
+
 import TerraformCommand.{MultiValueConfig, MultiValueTerraformArgument}
+import com.syedatifakhtar.scalaterraform.DestroyArguments.DestroyArgument
 
-object PlanAndApplyArguments {
+object DestroyArguments {
 
-  trait ApplyArgument extends TerraformArgument
-  trait PlanArgument extends TerraformArgument
+  trait DestroyArgument extends TerraformArgument
 
   final case class Vars(
     override val argValue: MultiValueConfig)
-    extends ApplyArgument
-      with PlanArgument
+    extends DestroyArgument
       with MultiValueTerraformArgument {
     override protected val argName: String = "var"
   }
 
 }
 
-final case class ApplyCommand(
+final case class DestroyCommand(
   override val sourceDir: String,
   override val buildDirPath: String,
-  override val opts: ApplyArgument*
-) extends TerraformCommand[ApplyArgument,Unit] with DefaultCmdRunner  {
-  override val cmd: String = "apply"
+  override val opts: DestroyArgument*
+) extends TerraformCommand[DestroyArgument,Unit] with DefaultCmdRunner  {
+  override val cmd: String = "destroy"
   override val prependCondition: String = "-auto-approve"
 }
