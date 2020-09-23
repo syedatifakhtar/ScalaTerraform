@@ -104,7 +104,6 @@ protected trait TerraformCommand[T <: TerraformArgument, OUT] extends LazyLoggin
   def commandHook = {}
   def run: Try[OUT] = {
     Try {
-      if (!buildDirPath.contains("build")) throw new Exception("Build directory must have build in the path to prevent accidental deletion")
       validateAll
       commandHook
       val command = buildCommand
