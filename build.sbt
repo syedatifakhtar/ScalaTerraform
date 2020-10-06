@@ -1,10 +1,24 @@
-name := "ScalaTerraform"
-version := "0.2-SNAPSHOT"
-organization := "com.syedatifakhtar"
-resolvers += "Artima Maven Repository" at "https://repo.artima.com/releases"
-crossScalaVersions := Seq( "2.12.11","2.13.2")
-assemblyJarName in assembly := "scalaterraform.jar"
-scalaVersion := "2.12.11"
+
+
+lazy val root = (project in file("."))
+  .settings(
+    name := "ScalaTerraform",
+    version := "0.3-SNAPSHOT",
+    organization := "com.syedatifakhtar.scalaterraform",
+    resolvers += "Artima Maven Repository" at "https://repo.artima.com/releases",
+    crossScalaVersions := Seq("2.12.11", "2.13.2"),
+    assemblyJarName in assembly := "scalaterraform.jar",
+    scalaVersion := "2.12.11",
+    homepage := Some(url("https://github.com/syedatifakhtar/ScalaTerraform")),
+    scmInfo := Some(ScmInfo(url("https://github.com/syedatifakhtar/ScalaTerraform"), "git@github.com:syedatifakhtar/ScalaTerraform.git")),
+    developers := List(Developer("atif", "atif", "syedatifakhtar@gmail.com", url("https://github.com/syedatifakhtar"))),
+    licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
+    publishMavenStyle := true
+  )
+  .dependsOn(sc)
+
+lazy val sc = RootProject(uri("https://github.com/syedatifakhtar/PipelineDSL.git"))
+
 
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest-funsuite" % "3.2.0" % "test",
@@ -16,4 +30,11 @@ libraryDependencies ++= Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "com.typesafe.play" %% "play-json" % "2.8.1"
+)
+
+publishTo := Some(
+  if (isSnapshot.value)
+    Opts.resolver.sonatypeSnapshots
+  else
+    Opts.resolver.sonatypeStaging
 )

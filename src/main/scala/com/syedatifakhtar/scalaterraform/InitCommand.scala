@@ -36,8 +36,6 @@ final case class InitCommand(override val sourceDir: String, override val buildD
   private def copyFilesToBuildDir = {
     val buildDirectory = new File(buildDirPath)
     if (!buildDirectory.exists) FileUtils.forceMkdir(buildDirectory)
-    val filesDeleted = new Directory(buildDirectory).deleteRecursively()
-    if (!filesDeleted) throw new Exception("Files could not be deleted in build dir")
     FileUtils.copyDirectory(new File(sourceDir), buildDirectory)
   }
 
