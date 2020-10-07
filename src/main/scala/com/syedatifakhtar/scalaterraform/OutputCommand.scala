@@ -14,6 +14,6 @@ final case class OutputCommand(
   override val buildDirPath: String,
   override val opts: OutputArguments*
 ) extends TerraformCommand[OutputArguments,Map[String,String]] with CaputureOutputCmdRunner  {
-  override val cmd: String = "output"
+  override val cmd: String = TerraformCommands.OUTPUT
   override val prependCondition: String = "-json"
 }

@@ -112,3 +112,11 @@ protected trait TerraformCommand[T <: TerraformArgument, OUT] extends LazyLoggin
     }
   }
 }
+
+object TerraformCommands {
+  final val DESTROY = "destroy"
+  final val APPLY = "apply"
+  final val PLAN = "plan"
+  final val INIT = "init"
+  final val OUTPUT = "output"
+}

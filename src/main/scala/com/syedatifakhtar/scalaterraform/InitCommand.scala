@@ -31,7 +31,7 @@ object InitArguments {
 
 final case class InitCommand(override val sourceDir: String, override val buildDirPath: String, override val opts: InitArgument*)
   extends TerraformCommand[InitArgument, Unit] with DefaultCmdRunner {
-  override val cmd: String = "init"
+  override val cmd: String = TerraformCommands.INIT
 
   private def copyFilesToBuildDir = {
     val buildDirectory = new File(buildDirPath)

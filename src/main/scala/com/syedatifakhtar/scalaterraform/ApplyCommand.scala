@@ -23,6 +23,6 @@ final case class ApplyCommand(
   override val buildDirPath: String,
   override val opts: ApplyArgument*
 ) extends TerraformCommand[ApplyArgument,Unit] with DefaultCmdRunner  {
-  override val cmd: String = "apply"
+  override val cmd: String = TerraformCommands.APPLY
   override val prependCondition: String = "-auto-approve"
 }

@@ -22,6 +22,6 @@ final case class DestroyCommand(
   override val buildDirPath: String,
   override val opts: DestroyArgument*
 ) extends TerraformCommand[DestroyArgument,Unit] with DefaultCmdRunner  {
-  override val cmd: String = "destroy"
+  override val cmd: String = TerraformCommands.DESTROY
   override val prependCondition: String = "-auto-approve"
 }

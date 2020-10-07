@@ -7,5 +7,5 @@ final case class PlanCommand(
   override val buildDirPath: String,
   override val opts: PlanArgument*)
   extends TerraformCommand[PlanArgument, Unit] with DefaultCmdRunner {
-  override val cmd: String = "plan"
+  override val cmd: String = TerraformCommands.PLAN
 }

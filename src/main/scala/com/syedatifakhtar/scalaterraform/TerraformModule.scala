@@ -53,12 +53,13 @@ case class TerraformModule(sourcePath: String, buildPath: String)(val moduleName
   def finalSourcePath = s"${sourcePath}/$moduleName"
   def finalBuildPath = s"${buildPath}/$moduleName"
   def invoke(cmd: String) = {
+    import TerraformCommands._
     cmd match {
-      case "init" => init
-      case "apply" => apply
-      case "plan" => plan
-      case "destroy" => destroy
-      case "output" => output
+      case INIT => init
+      case APPLY => apply
+      case PLAN => plan
+      case DESTROY => destroy
+      case OUTPUT => output
       case _ => Failure(new Exception("Invalid command"))
     }
   }
