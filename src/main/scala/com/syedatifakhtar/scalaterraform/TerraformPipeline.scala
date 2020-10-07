@@ -2,7 +2,7 @@ package com.syedatifakhtar.scalaterraform
 
 import scala.util.Try
 
-object TerraformPipeline {
+object TerraformPipelines {
 
   import com.syedatifakhtar.pipelines.Pipelines._
 
@@ -24,15 +24,19 @@ object TerraformPipeline {
   )
     extends SimplePipeline(name, PipelineContext(overrides), steps) {
 
-    def andThen(invokableStep: String => TerraformStep) = {
-      new TerraformPipeline(name, terraformCommand, steps :+ invokableStep(terraformCommand), overrides)
+    def andThen(invokableStep: String => TerraformStep): TerraformPipeline = {
+      terraformCommand match {
+        case "destroy" => new TerraformPipeline(name, terraformCommand, invokableStep(terraformCommand) +: steps, overrides)
+        case _ => new TerraformPipeline(name, terraformCommand, steps :+ invokableStep(terraformCommand), overrides)
+      }
     }
-    def |(invokableStep: String => TerraformStep) = {
+    def |(invokableStep: String => TerraformStep): TerraformPipeline = {
       andThen(invokableStep)
     }
-    def ->(invokableStep: String => TerraformStep) = {
+    def ->(invokableStep: String => TerraformStep): TerraformPipeline = {
       andThen(invokableStep)
     }
+
   }
 
   object TerraformPipeline {

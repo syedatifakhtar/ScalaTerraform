@@ -15,10 +15,6 @@ lazy val root = (project in file("."))
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
     publishMavenStyle := true
   )
-  .dependsOn(sc)
-
-lazy val sc = RootProject(uri("https://github.com/syedatifakhtar/PipelineDSL.git"))
-
 
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest-funsuite" % "3.2.0" % "test",
@@ -28,6 +24,7 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest-mustmatchers" % "3.2.0" % "test",
   "commons-io" % "commons-io" % "2.8.0",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
+  "com.syedatifakhtar.simplepipelinedsl" %% "simplepipelinedsl" % "0.1-SNAPSHOT",
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "com.typesafe.play" %% "play-json" % "2.8.1"
 )
