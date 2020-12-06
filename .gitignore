@@ -25,3 +25,4 @@ target/
 .worksheet
 .terraform
 build/
+.bsp/
