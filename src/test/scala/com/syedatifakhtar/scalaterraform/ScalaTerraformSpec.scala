@@ -151,6 +151,8 @@ class ScalaTerraformSpec extends AnyFunSpec with should.Matchers {
     }
   }
 
+
+
   describe("Terraform plan") {
     describe("is built with empty args") {
       it("should match") {
@@ -163,6 +165,8 @@ class ScalaTerraformSpec extends AnyFunSpec with should.Matchers {
           PlanCommand("", "", Vars(Map("blah" -> "blah", "blah2" -> "blah"))).buildCommand)
       }
     }
+
+
     describe("is run") {
       it("should plan resources when no args are passed") {
         val tempFolder = createTempDir()

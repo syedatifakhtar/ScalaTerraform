@@ -9,7 +9,7 @@ object TerraformPipelines {
 
   case class TerraformStep(module: TerraformModule)(command: String) extends Step[PipelineContext] {
     override val name = module.moduleName
-    override def run(pc: PipelineContext): Try[StepOutput] = {
+    override def run(pc: => PipelineContext): Try[StepOutput] = {
       module.invoke(command) map {
         case Some(y: Map[String, String]) => y
         case _ => Map.empty[String, String]
@@ -20,7 +20,7 @@ object TerraformPipelines {
   class TerraformPipeline(override val name: String
     , terraformCommand: String
     , override val steps: Seq[TerraformStep]
-    , overrides: Map[String, String]
+    , overrides: => Map[String, String]
   )
     extends SimplePipeline(name, PipelineContext(overrides), steps) {
 

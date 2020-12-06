@@ -3,10 +3,10 @@
 lazy val root = (project in file("."))
   .settings(
     name := "ScalaTerraform",
-    version := "0.3-SNAPSHOT",
+    version := "0.5-SNAPSHOT",
     organization := "com.syedatifakhtar.scalaterraform",
     resolvers += "Artima Maven Repository" at "https://repo.artima.com/releases",
-    crossScalaVersions := Seq("2.12.11", "2.13.2"),
+    crossScalaVersions := Seq("2.12.11"),
     assemblyJarName in assembly := "scalaterraform.jar",
     scalaVersion := "2.12.11",
     homepage := Some(url("https://github.com/syedatifakhtar/ScalaTerraform")),
@@ -16,6 +16,7 @@ lazy val root = (project in file("."))
     publishMavenStyle := true
   )
 
+
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest-funsuite" % "3.2.0" % "test",
   "org.scalactic" %% "scalactic" % "3.2.0",
@@ -24,7 +25,6 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest-mustmatchers" % "3.2.0" % "test",
   "commons-io" % "commons-io" % "2.8.0",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
-  "com.syedatifakhtar.simplepipelinedsl" %% "simplepipelinedsl" % "0.1-SNAPSHOT",
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "com.typesafe.play" %% "play-json" % "2.8.1"
 )

@@ -18,14 +18,30 @@ trait ArgsResolver {
   def getDestroyArgs(): Seq[DestroyArgument]
 }
 
+
 case class DefaultConfigArgsResolver[ConfigType]
 (configValueResolver: String => Option[Map[String, String]])
   (configTree: String)
   (nameInConfig: String)
+  (overrides: => Option[Map[String, Map[String, String]]])
   extends ArgsResolver {
 
-  private val vars = configValueResolver(s"${configTree}.${nameInConfig}.vars")
-  private val backendConfigs = configValueResolver(s"${configTree}.${nameInConfig}.backend-config")
+  def overrideMaps(initialMap: Option[Map[String, String]], overrides: Option[Map[String, String]]): Option[Map[String, String]] = {
+    if (overrides.isEmpty && initialMap.isEmpty) None else {
+      Some(
+        (initialMap
+          .getOrElse(Nil)
+          .toMap.filterKeys { key =>
+          !overrides.getOrElse(Nil).toMap.isDefinedAt(key)
+        }.toSet ++ overrides.getOrElse(Nil).toMap.toSet
+          ).toMap
+      )
+    }
+
+  }
+
+  private val vars = overrideMaps(configValueResolver(s"${configTree}.${nameInConfig}.vars"),overrides.flatMap(_.get("vars")))
+  private val backendConfigs = overrideMaps(configValueResolver(s"${configTree}.${nameInConfig}.backend-config"),overrides.flatMap(_.get("backend-config")))
   override def getInitArgs(): Seq[InitArgument] = {
     if (backendConfigs.isDefined)
       Seq(HasBackend(), BackendConfigs(backendConfigs.get))
