@@ -3,12 +3,12 @@
 lazy val root = (project in file("."))
   .settings(
     name := "ScalaTerraform",
-    version := "0.5-SNAPSHOT",
+    version := "0.6",
     organization := "com.syedatifakhtar.scalaterraform",
     resolvers += "Artima Maven Repository" at "https://repo.artima.com/releases",
-    crossScalaVersions := Seq("2.12.11"),
+    crossScalaVersions := Seq("2.13.4"),
     assemblyJarName in assembly := "scalaterraform.jar",
-    scalaVersion := "2.12.11",
+    scalaVersion := "2.13.4",
     homepage := Some(url("https://github.com/syedatifakhtar/ScalaTerraform")),
     scmInfo := Some(ScmInfo(url("https://github.com/syedatifakhtar/ScalaTerraform"), "git@github.com:syedatifakhtar/ScalaTerraform.git")),
     developers := List(Developer("atif", "atif", "syedatifakhtar@gmail.com", url("https://github.com/syedatifakhtar"))),

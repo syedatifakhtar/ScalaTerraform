@@ -24,5 +24,5 @@ final case class ApplyCommand(
   override val opts: ApplyArgument*
 ) extends TerraformCommand[ApplyArgument,Unit] with DefaultCmdRunner  {
   override val cmd: String = TerraformCommands.APPLY
-  override val prependCondition: String = "-auto-approve"
+  override val prependCondition: String = "-auto-approve -input=false"
 }

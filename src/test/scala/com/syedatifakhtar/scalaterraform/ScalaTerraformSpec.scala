@@ -56,12 +56,12 @@ class ScalaTerraformSpec extends AnyFunSpec with should.Matchers {
   describe("Terraform apply") {
     describe("is built with empty args") {
       it("should match") {
-        assertResult("terraform apply -auto-approve")(ApplyCommand("", "").buildCommand)
+        assertResult("terraform apply -auto-approve -input=false")(ApplyCommand("", "").buildCommand)
       }
     }
     describe("is built with arguments") {
       it("should parse list of vars passed in") {
-        assertResult("terraform apply -auto-approve -var='blah=blah' -var='blah2=blah'")(
+        assertResult("terraform apply -auto-approve -input=false -var='blah=blah' -var='blah2=blah'")(
           ApplyCommand("", "", Vars(Map("blah" -> "blah", "blah2" -> "blah"))).buildCommand)
       }
     }
@@ -149,6 +149,35 @@ class ScalaTerraformSpec extends AnyFunSpec with should.Matchers {
           .exists(_.equalsIgnoreCase("someKey.tfstate")))
       Directory(tempFolder).deleteRecursively()
     }
+
+    it("should fail when wrong var args are passed to plan") {
+      val tempFolder = createTempDir()
+      println(s"Temp folder: ${tempFolder}")
+      val tfResourceDir = new File(sourceDirPathTFVars)
+      val buildDirFile = new File(tempFolder.getAbsolutePath + "/build")
+      InitCommand(
+        tfResourceDir.getAbsolutePath
+        , buildDirFile.getAbsolutePath
+        , HasBackend()
+        , BackendConfigs(Map("path" -> "someKey.tfstate"))
+      ).run
+        .flatMap { _ =>
+          PlanCommand(
+            tfResourceDir.getAbsolutePath
+            , buildDirFile.getAbsolutePath
+            , Vars(Map(
+              "blah"->"blah1",
+              "lastname"->"blah2"
+            )))
+            .run
+        }
+      assertResult(false)(
+        buildDirFile
+          .listFiles()
+          .map(_.getName)
+          .exists(_.equalsIgnoreCase("someKey.tfstate")))
+      Directory(tempFolder).deleteRecursively()
+    }
   }
 
 
@@ -156,12 +185,12 @@ class ScalaTerraformSpec extends AnyFunSpec with should.Matchers {
   describe("Terraform plan") {
     describe("is built with empty args") {
       it("should match") {
-        assertResult("terraform plan")(PlanCommand("", "").buildCommand)
+        assertResult("terraform plan -input=false")(PlanCommand("", "").buildCommand)
       }
     }
     describe("is built with arguments") {
       it("should parse list of vars passed in") {
-        assertResult("terraform plan -var='blah=blah' -var='blah2=blah'")(
+        assertResult("terraform plan -input=false -var='blah=blah' -var='blah2=blah'")(
           PlanCommand("", "", Vars(Map("blah" -> "blah", "blah2" -> "blah"))).buildCommand)
       }
     }

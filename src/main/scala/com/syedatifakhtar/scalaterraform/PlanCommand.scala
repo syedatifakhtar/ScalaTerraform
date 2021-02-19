@@ -8,4 +8,5 @@ final case class PlanCommand(
   override val opts: PlanArgument*)
   extends TerraformCommand[PlanArgument, Unit] with DefaultCmdRunner {
   override val cmd: String = TerraformCommands.PLAN
+  override val prependCondition: String = "-input=false"
 }
