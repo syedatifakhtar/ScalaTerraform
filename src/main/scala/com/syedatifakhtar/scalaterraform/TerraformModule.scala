@@ -2,12 +2,12 @@ package com.syedatifakhtar.scalaterraform
 
 
 import java.io.File
-
 import com.syedatifakhtar.scalaterraform.DestroyArguments.DestroyArgument
 import com.syedatifakhtar.scalaterraform.InitArguments.{BackendConfigs, HasBackend, InitArgument}
 import com.syedatifakhtar.scalaterraform.PlanAndApplyArguments.{ApplyArgument, PlanArgument}
 import com.typesafe.scalalogging.LazyLogging
 
+import java.nio.file.Files
 import scala.reflect.io.Directory
 import scala.util.{Failure, Try}
 
@@ -40,8 +40,8 @@ case class DefaultConfigArgsResolver[ConfigType]
 
   }
 
-  private val vars = overrideMaps(configValueResolver(s"${configTree}.${nameInConfig}.vars"),overrides.flatMap(_.get("vars")))
-  private val backendConfigs = overrideMaps(configValueResolver(s"${configTree}.${nameInConfig}.backend-config"),overrides.flatMap(_.get("backend-config")))
+  private val vars = overrideMaps(configValueResolver(s"${configTree}.${nameInConfig}.vars"), overrides.flatMap(_.get("vars")))
+  private val backendConfigs = overrideMaps(configValueResolver(s"${configTree}.${nameInConfig}.backend-config"), overrides.flatMap(_.get("backend-config")))
   override def getInitArgs(): Seq[InitArgument] = {
     if (backendConfigs.isDefined)
       Seq(HasBackend(), BackendConfigs(backendConfigs.get))
@@ -82,18 +82,28 @@ case class TerraformModule(sourcePath: String, buildPath: String)(val moduleName
   def init: Try[Unit] = {
     for {
       _ <- Try {
-        val directory = new Directory(new File(finalBuildPath))
+        val directory = new File(finalBuildPath)
         if (directory.exists) {
           logger.debug("Deleting " + finalBuildPath)
           if (!finalBuildPath.contains("build")) {
             throw new Exception("Build path does not contain `build` in the path string," +
               " this is to avoid accidental deletion when wrong build path args are passed")
           }
-          directory.deleteRecursively()
+          deleteRecursiveIfExists(directory)
         }
       }
       result <- InitCommand(finalSourcePath, finalBuildPath, argsResolver.getInitArgs(): _*).run
     } yield result
+  }
+
+  def deleteRecursiveIfExists(file: File): Unit = {
+    if (file.exists() && !file.isDirectory && !Files.isSymbolicLink(file.toPath)) {
+      val outcome = file.delete()
+      if(!outcome) throw new Exception(s"Could not delete file: ${file.getAbsolutePath}")
+    }
+    else if(file.isDirectory && !Files.isSymbolicLink(file.toPath)) {
+      file.listFiles().toList.foreach(deleteRecursiveIfExists)
+    }
   }
 
   def apply: Try[Unit] = {
