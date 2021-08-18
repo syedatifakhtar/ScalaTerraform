@@ -3,7 +3,7 @@
 lazy val root = (project in file("."))
   .settings(
     name := "ScalaTerraform",
-    version := "0.6",
+    version := "0.7",
     organization := "com.syedatifakhtar.scalaterraform",
     resolvers += "Artima Maven Repository" at "https://repo.artima.com/releases",
     crossScalaVersions := Seq("2.13.4"),
