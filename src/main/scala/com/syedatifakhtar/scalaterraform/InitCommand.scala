@@ -36,8 +36,8 @@ final case class InitCommand(override val sourceDir: String, override val buildD
 
   private def copyFilesToBuildDir = {
     val buildDirectory = new File(buildDirPath)
+    logger.debug(s"Starting copying terraform files from Jar : ${sourceDir} to ${buildDirPath}")
     if(sourceDir.contains(".jar")) {
-      logger.debug("Starting copying terraform files from Jar")
       val file = this.getClass.getResource(sourceDir.split(".jar!")(1))
       val connection = file.openConnection().asInstanceOf[JarURLConnection]
       FileResourceUtil.copyJarResourcesRecursively(buildDirectory,connection)
