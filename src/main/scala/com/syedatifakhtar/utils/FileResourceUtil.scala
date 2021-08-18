@@ -21,7 +21,6 @@ object FileResourceUtil {
       entry =>
         entry.getName.startsWith(jarURLConnection.getEntryName)
         if(entry.getName.startsWith(jarURLConnection.getEntryName)) {
-          entry.getRealName
           val fileName = removeStart(entry.getName,jarURLConnection.getEntryName)
           val f = new File(destDir,fileName)
           if(!entry.isDirectory) {
