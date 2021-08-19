@@ -1,12 +1,13 @@
 package com.syedatifakhtar.utils
 
+import com.typesafe.scalalogging.LazyLogging
 import org.apache.commons.io.FileUtils
 
 import java.io.File
 import java.net.{FileNameMap, JarURLConnection}
 import scala.jdk.CollectionConverters._
 
-object FileResourceUtil {
+object FileResourceUtil extends LazyLogging{
 
   def removeStart(fileName: String, substringToRemove: String) = {
     if (fileName.isEmpty || substringToRemove.isEmpty) fileName
@@ -28,7 +29,10 @@ object FileResourceUtil {
             FileUtils.copyInputStreamToFile(entryInputStream, f)
             entryInputStream.close()
           }
-          else if (!f.exists() && !f.mkdirs()) throw new Exception(s"Could not create directory with path: ${f.getAbsolutePath}")
+          else {
+            logger.debug(s"Creating directory ${f.getAbsolutePath}")
+            FileUtils.forceMkdir(f)
+          }
         }
     }
     true
